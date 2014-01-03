@@ -3,7 +3,7 @@
 import unittest
 from src.call import *
 
-class TestConsoleController(unittest.TestCase):
+class TestCall(unittest.TestCase):
 
     def setUp(self):
         self.call1 = Call("0/0:1,0:1:3:0,3,26", "0/0")
@@ -49,7 +49,7 @@ class TestConsoleController(unittest.TestCase):
 ##########################
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestConsoleController))
+    suite.addTest(unittest.makeSuite(TestCall))
     return suite
 
 if __name__ == '__main__':
