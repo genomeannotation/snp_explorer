@@ -22,3 +22,17 @@ class SNP:
         self.alternate = alt
         self.calls = calls
 
+    def get_call_by_index(self, index):
+        call_index = index - 9      # individual genotypes start at column 9
+        if call_index < 0 or call_index >= len(self.calls):
+            return None
+        else:
+            return self.calls[call_index]
+
+    def get_calls_from_group(self, group):
+        indices = group.get_indices()
+        calls = []
+        for index in indices:
+            calls.append(self.get_call_by_index(index))
+        return calls
+

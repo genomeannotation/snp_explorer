@@ -9,7 +9,8 @@ class TestSNP(unittest.TestCase):
     def setUp(self):
         self.call1 = Mock()
         self.call2 = Mock()
-        self.snp1 = SNP('seq1', 150, 'A', 'C', [self.call1, self.call2])
+        self.call3 = Mock()
+        self.snp1 = SNP('seq1', 150, 'A', 'C', [self.call1, self.call2, self.call3])
 
     def test_constructor(self):
         self.assertEquals('SNP', self.snp1.__class__.__name__)
@@ -27,6 +28,18 @@ class TestSNP(unittest.TestCase):
         snp = generate_snp("seq2\t125\t.\tG\tT\t30.7\tPASS\tblah_blah_info_field")
         self.assertFalse(snp)
 
+    def test_get_call_by_index(self):
+        self.assertEquals(self.call1, self.snp1.get_call_by_index(9))
+
+    def test_get_call_by_index_out_of_range(self):
+        no_call = self.snp1.get_call_by_index(20)
+        self.assertFalse(no_call)
+
+    def test_get_calls_from_group(self):
+        group = Mock()
+        group.get_indices.return_value = [9, 11]
+        calls = self.snp1.get_calls_from_group(group)
+        self.assertEquals(2, len(calls))
 
 ##########################
 def suite():
