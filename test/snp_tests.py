@@ -35,11 +35,32 @@ class TestSNP(unittest.TestCase):
         no_call = self.snp1.get_call_by_index(20)
         self.assertFalse(no_call)
 
+    def setup_group(self):
+        self.group1 = Mock()
+        self.group1.get_indices.return_value = [9, 11]
+        self.group2 = Mock()
+        self.group2.get_indices.return_value = [9, 10, 11]
+
     def test_get_calls_from_group(self):
-        group = Mock()
-        group.get_indices.return_value = [9, 11]
-        calls = self.snp1.get_calls_from_group(group)
+        self.setup_group()
+        calls = self.snp1.get_calls_from_group(self.group1)
         self.assertEquals(2, len(calls))
+
+    def test_at_least_N_calls_in_group(self):
+        self.setup_group()
+        self.call1.no_call.return_value = False
+        self.call2.no_call.return_value = True
+        self.call3.no_call.return_value = False
+        self.assertTrue(self.snp1.at_least_N_calls_in_group(2, self.group2))
+
+    def test_at_least_N_calls_in_group_fails(self):
+        self.setup_group()
+        self.call1.no_call.return_value = True
+        self.call2.no_call.return_value = True
+        self.call3.no_call.return_value = False
+        self.assertFalse(self.snp1.at_least_N_calls_in_group(2, self.group2))
+        
+
 
 ##########################
 def suite():

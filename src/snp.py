@@ -36,3 +36,7 @@ class SNP:
             calls.append(self.get_call_by_index(index))
         return calls
 
+    def at_least_N_calls_in_group(self, min_calls, group):
+        all_calls = self.get_calls_from_group(group)
+        calls = [c for c in all_calls if c.no_call() == False]
+        return len(calls) >= min_calls
