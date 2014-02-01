@@ -1,0 +1,20 @@
+motivation: current target is to read in a file of taro snps, define a group of samples, then remove all snps but those which are homozygous and consistent within the group (allowing for a certain number of no-calls) but homozygous and different within the out-group (again allowing for a certain number of no-calls, but not allowing for any matches or heterozygous calls).
+
+passing snps would then be written to a new file.
+
+so, steps: remove all snps which contain any heterozygous bases whatsoever. next pass, check each snp for (a) all calls within group are equal or no-call, and #no-calls < N ... (b) all calls within out-group are NOT equal to group call and #no-calls <M.
+
+methods needed:
+
+snp.contains_heterozygous_call
+--> call.is_heterozygous
+
+snp.consistent_within_group(group)
+
+snp.fewer_than_n_no-calls_within_group(group, n)
+
+...that plus some way to complement the group (maybe group belongs to vcf, or just to controller?) would do it.
+...change the wording from "fewer than n no-calls" to "at least n calls" and we have that functionality within group.
+also have call.heterozygous, so snp.contains_heterozygous_call is trivial.
+also also have snp.get_calls_from_group, so consistent within group shouldn't be real tough...
+shibar, we are almost there. then need controller and console, plus functions to read and write vcf and we are cherry.
