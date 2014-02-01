@@ -59,6 +59,19 @@ class TestSNP(unittest.TestCase):
         self.call2.no_call.return_value = True
         self.call3.no_call.return_value = False
         self.assertFalse(self.snp1.at_least_N_calls_in_group(2, self.group2))
+
+    def test_contains_heterozygous_call(self):
+        self.call1.heterozygous.return_value = False
+        self.call2.heterozygous.return_value = True 
+        self.call3.heterozygous.return_value = False
+        self.assertTrue(self.snp1.contains_heterozygous_call())
+
+    def test_contains_heterozygous_call_returns_false(self):
+        self.call1.heterozygous.return_value = False
+        self.call2.heterozygous.return_value = False
+        self.call3.heterozygous.return_value = False
+        self.assertFalse(self.snp1.contains_heterozygous_call())
+
         
 
 

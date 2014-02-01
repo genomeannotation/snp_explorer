@@ -6,14 +6,15 @@ so, steps: remove all snps which contain any heterozygous bases whatsoever. next
 
 methods needed:
 
-snp.contains_heterozygous_call
---> call.is_heterozygous
+X snp.contains_heterozygous_call
+X --> call.heterozygous
 
 snp.consistent_within_group(group)
 
 snp.fewer_than_n_no-calls_within_group(group, n)
 
 ...that plus some way to complement the group (maybe group belongs to vcf, or just to controller?) would do it.
+...on second thought, better to explicitly define in-group and out-group, since within a given vcf there may be plenty of samples which are not of interest at all -- i.e. a no-call from a certain sample shouldn't count because we're not concerned with it. it'd still be useful to be able to define the out-group as the complement of the in-group though...
 ...change the wording from "fewer than n no-calls" to "at least n calls" and we have that functionality within group.
 also have call.heterozygous, so snp.contains_heterozygous_call is trivial.
 also also have snp.get_calls_from_group, so consistent within group shouldn't be real tough...

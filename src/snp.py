@@ -40,3 +40,10 @@ class SNP:
         all_calls = self.get_calls_from_group(group)
         calls = [c for c in all_calls if c.no_call() == False]
         return len(calls) >= min_calls
+
+    def contains_heterozygous_call(self):
+        for call in self.calls:
+            if call.heterozygous():
+                return True
+        return False
+
