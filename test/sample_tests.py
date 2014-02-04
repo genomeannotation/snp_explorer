@@ -13,6 +13,11 @@ class TestSample(unittest.TestCase):
         self.assertEquals(9, self.sample1.index)
         self.assertEquals('sample1', self.sample1.sample_name)
 
+    def test_create_samples_from_vcf_header(self):
+        vcf_header = "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tfoo_sample\tbar_sample\tbaz_sample"
+        samples = create_samples_from_vcf_header(vcf_header)
+        self.assertEqual(3, len(samples))
+        self.assertEqual('bar_sample', samples[1].sample_name)
 
 
 ##########################

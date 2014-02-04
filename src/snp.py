@@ -52,7 +52,15 @@ class SNP:
         if calls:
             first_genotype = calls.pop(0).genotype
             for call in calls:
-                if call.genotype != first_genotype:
+                if call.no_call() or call.genotype == first_genotype:
+                    continue
+                else:
                     return False
             return True
+
+    def two_consistent_groups_differ(self, group1, group2):
+        """Return True if genotypes within two (assumed) consistent groups are different."""
+        calls1 = self.get_calls_from_group(group1)
+        calls2 = self.get_calls_from_group(group2)
+        return calls1[0].genotype != calls2[0].genotype
 

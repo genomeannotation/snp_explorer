@@ -76,10 +76,38 @@ class TestSNP(unittest.TestCase):
         self.setup_group()
         # group1 is columns 9, 11; group2 is columns 9, 10, 11
         self.call1.genotype = '1/1'
+        self.call1.no_call.return_value = False
         self.call2.genotype = '0/0'
+        self.call2.no_call.return_value = False
         self.call3.genotype = '1/1'
+        self.call3.no_call.return_value = False
         self.assertTrue(self.snp1.consistent_within_group(self.group1))
         self.assertFalse(self.snp1.consistent_within_group(self.group2))
+
+    def test_consistent_within_group_allows_no_call(self):
+        self.setup_group()
+        # group1 is columns 9, 11; group2 is columns 9, 10, 11
+        self.call1.genotype = '1/1'
+        self.call1.no_call.return_value = False
+        self.call3.genotype = './.'
+        self.call3.no_call.return_value = True
+        self.assertTrue(self.snp1.consistent_within_group(self.group1))
+
+    def test_two_consistent_groups_differ(self):
+        snp = generate_snp("seq2\t125\t.\tG\tT\t30.7\tPASS\tblah_blah_info_field\tblah_blah_format_field\t0/0:1,0:1:3:0,3,26\t1/1:0,2:2:6:71,6,0\t./.\t0/0:1,0:1:3:0,3,26\t0/0:1,0:1:3:0,3,26\t1/1:0,2:2:6:71,6,0")
+        group1 = Mock()
+        group1.get_indices.return_value = [9, 12, 13]
+        group2 = Mock()
+        group2.get_indices.return_value = [10, 14]
+        self.assertTrue(snp.two_consistent_groups_differ(group1, group2))
+
+    def test_two_consistent_groups_differ_returns_false_when_same(self):
+        snp = generate_snp("seq2\t125\t.\tG\tT\t30.7\tPASS\tblah_blah_info_field\tblah_blah_format_field\t1/1:1,0:1:3:0,3,26\t1/1:0,2:2:6:71,6,0\t./.\t0/0:1,0:1:3:0,3,26\t1/1:1,0:1:3:0,3,26\t1/1:0,2:2:6:71,6,0")
+        group1 = Mock()
+        group1.get_indices.return_value = [9, 10]
+        group2 = Mock()
+        group2.get_indices.return_value = [13, 14]
+        self.assertFalse(snp.two_consistent_groups_differ(group1, group2))
 
 
         
