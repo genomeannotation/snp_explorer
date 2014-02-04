@@ -72,6 +72,16 @@ class TestSNP(unittest.TestCase):
         self.call3.heterozygous.return_value = False
         self.assertFalse(self.snp1.contains_heterozygous_call())
 
+    def test_consistent_within_group(self):
+        self.setup_group()
+        # group1 is columns 9, 11; group2 is columns 9, 10, 11
+        self.call1.genotype = '1/1'
+        self.call2.genotype = '0/0'
+        self.call3.genotype = '1/1'
+        self.assertTrue(self.snp1.consistent_within_group(self.group1))
+        self.assertFalse(self.snp1.consistent_within_group(self.group2))
+
+
         
 
 

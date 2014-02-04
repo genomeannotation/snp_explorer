@@ -47,3 +47,12 @@ class SNP:
                 return True
         return False
 
+    def consistent_within_group(self, group):
+        calls = self.get_calls_from_group(group)
+        if calls:
+            first_genotype = calls.pop(0).genotype
+            for call in calls:
+                if call.genotype != first_genotype:
+                    return False
+            return True
+
