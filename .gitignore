@@ -12,3 +12,4 @@ real_files/*
 TEST_RUN/*
 BdorOperation/*
 linux64.tbl2asn
+all.mergedSNPs.vcf

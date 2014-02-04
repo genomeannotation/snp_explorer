@@ -24,6 +24,8 @@ class Call:
         
     def heterozygous(self):
         alleles = self.genotype.split('/')
+        if '.' in alleles:
+            return False
         return alleles[0] != alleles[1]
 
     def no_call(self):

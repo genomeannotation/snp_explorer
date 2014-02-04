@@ -29,6 +29,9 @@ class TestCall(unittest.TestCase):
         self.assertFalse(self.call2.heterozygous())
         self.assertTrue(self.call3.heterozygous())
 
+    def test_heterozygous_returns_false_with_no_call(self):
+        self.assertFalse(self.call4.heterozygous())
+
     def test_no_call(self):
         self.assertFalse(self.call1.no_call())
         self.assertTrue(self.call4.no_call())

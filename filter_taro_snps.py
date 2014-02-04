@@ -7,12 +7,11 @@ from src.group import Group
 from src.sample import Sample, create_samples_from_vcf_header
 import sys
 
-usage_message = "Usage: python filter_taro_snps.py <vcf_file>\n"
-
-# Validate command line argument
-if len(sys.argv) < 2:
-    print(usage_message)
-    sys.exit()
+def validate_command_line_argument(args):
+    usage_message = "Usage: python filter_taro_snps.py <vcf_file>\n"
+    if len(args) < 2:
+        sys.stderr.write(usage_message)
+        sys.exit()
 
 vcf_file = sys.argv[1]
 MIN_CALLS = 3
@@ -45,30 +44,39 @@ def create_groups(samples):
     for sample in samples:
         if resistant(sample):
             resist.append(sample)
-        elif nonresistant(sample:
+        elif nonresistant(sample):
             nonresist.append(sample)
         else:
             oth.append(sample)
     res = Group('Universally Resistant', resist)
     nonres = Group('Universally Nonresistant', nonresist)
     other = Group('Other', oth)
+    return res, nonres, other
 
 def snp_of_interest(snp, ingroup, outgroup, min_calls):
     if snp.contains_heterozygous_call():
+        print("hetero!")
         return False
     elif not snp.consistent_within_group(ingroup):
+        print("not consistent")
         return False
     elif not snp.consistent_within_group(outgroup):
+        print("not consistent")
         return False
-    elif not at_least_N_calls_in_group(min_calls, ingroup):
+    elif not snp.at_least_N_calls_in_group(min_calls, ingroup):
+        print("not at least n calls")
         return False
-    elif not at_least_N_calls_in_group(min_calls, outgroup):
+    elif not snp.at_least_N_calls_in_group(min_calls, outgroup):
+        print("not at least n calls")
         return False
-    # need different_calls_within_two_consistent_groups or whatever
+    elif not snp.two_consistent_groups_differ(ingroup, outgroup):
+        print("groups don't differ")
+        return False
     else:
         return True
 
 def main():
+    validate_command_line_argument(sys.argv)
     global MIN_CALLS
     with open(vcf_file, 'r') as vcf:
         for line in vcf:
