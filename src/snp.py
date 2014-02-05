@@ -3,6 +3,12 @@
 
 from src.call import *
 
+def get_first_call(calls):
+    for call in calls:
+        if not call.no_call():
+            return call
+    return None
+
 def generate_snp(fulltext):
     all_fields = fulltext.split('\t')
     if len(all_fields) < 10:
@@ -48,26 +54,24 @@ class SNP:
         return False
 
     def consistent_within_group(self, group):
-        print("checking consistent within group for " + group.group_name)
         calls = self.get_calls_from_group(group)
         if calls:
-            first_genotype = ""
-            while not first_genotype:
-                genotype = calls.pop(0).genotype
-                if genotype != './.':
-                    first_genotype = genotype
-            print("firstgenotype is " + first_genotype)
-            for call in calls:
-                if call.no_call() or call.genotype == first_genotype:
-                    continue
-                else:
-                    print("about to return false b/c " + call.genotype)
-                    return False
-            return True
+            first_call = get_first_call(calls)
+            if first_call:
+                first_genotype = first_call.genotype
+                for call in calls:
+                    if call.no_call() or call.genotype == first_genotype:
+                        continue
+                    else:
+                        return False
+        return True
 
     def two_consistent_groups_differ(self, group1, group2):
         """Return True if genotypes within two (assumed) consistent groups are different."""
         calls1 = self.get_calls_from_group(group1)
         calls2 = self.get_calls_from_group(group2)
-        return calls1[0].genotype != calls2[0].genotype
+        call1 = get_first_call(calls1)
+        call2 = get_first_call(calls2)
+        if call1 and call2:
+            return call1.genotype != call2.genotype
 

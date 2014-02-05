@@ -54,23 +54,17 @@ def create_groups(samples):
     return res, nonres, other
 
 def snp_of_interest(snp, ingroup, outgroup, min_calls):
-    if snp.contains_heterozygous_call():
-        print("hetero!")
-        return False
-    elif not snp.consistent_within_group(ingroup):
-        print("not consistent")
+    #if snp.contains_heterozygous_call():
+    #    return False
+    if not snp.consistent_within_group(ingroup):
         return False
     elif not snp.consistent_within_group(outgroup):
-        print("not consistent")
         return False
     elif not snp.at_least_N_calls_in_group(min_calls, ingroup):
-        print("not at least n calls")
         return False
     elif not snp.at_least_N_calls_in_group(min_calls, outgroup):
-        print("not at least n calls")
         return False
     elif not snp.two_consistent_groups_differ(ingroup, outgroup):
-        print("groups don't differ")
         return False
     else:
         return True
@@ -90,6 +84,17 @@ def main():
                 res, nonres, other = create_groups(samples)
             else:
                 snp = generate_snp(line)
+                print("we are at chrom " + snp.chrom + " pos " + str(snp.position))
+                res_guys = snp.get_calls_from_group(res)
+                res_calls = []
+                for call in res_guys:
+                    res_calls.append(call.genotype)
+                nores_guys = snp.get_calls_from_group(nonres)
+                nonres_calls = []
+                for call in nores_guys:
+                    nonres_calls.append(call.genotype)
+                print("calls from resistant group are " + str(res_calls))
+                print("calls from nonresistant group are " + str(nonres_calls))
                 if snp and snp_of_interest(snp, res, nonres, MIN_CALLS):
                     sys.stdout.write(line)
 
