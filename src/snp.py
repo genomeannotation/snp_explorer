@@ -48,13 +48,20 @@ class SNP:
         return False
 
     def consistent_within_group(self, group):
+        print("checking consistent within group for " + group.group_name)
         calls = self.get_calls_from_group(group)
         if calls:
-            first_genotype = calls.pop(0).genotype
+            first_genotype = ""
+            while not first_genotype:
+                genotype = calls.pop(0).genotype
+                if genotype != './.':
+                    first_genotype = genotype
+            print("firstgenotype is " + first_genotype)
             for call in calls:
                 if call.no_call() or call.genotype == first_genotype:
                     continue
                 else:
+                    print("about to return false b/c " + call.genotype)
                     return False
             return True
 
