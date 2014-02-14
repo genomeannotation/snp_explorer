@@ -13,3 +13,4 @@ TEST_RUN/*
 BdorOperation/*
 linux64.tbl2asn
 all.mergedSNPs.vcf
+*.snp_explorer.history
