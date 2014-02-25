@@ -16,7 +16,8 @@ class TestUIController(unittest.TestCase):
 
     def test_read_vcf(self):
         self.assertFalse(self.controller.vcf)
-        self.controller.read_vcf(io.BytesIO('# foo vcf'))
+        # TODO patch io and assert call instead of read real file
+        self.controller.read_vcf("sample_files/5samples_5snps.vcf")
         self.assertTrue(self.controller.vcf)
 
 
