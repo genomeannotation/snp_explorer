@@ -1,20 +1,23 @@
 #!/usr/bin/env python
 
 import unittest
+import io
 from mock import Mock
 from src.ui_controller import UIController
 
 class TestUIController(unittest.TestCase):
 
     def setUp(self):
+        pass
         self.controller = UIController()
 
     def test_constructor(self):
-        self.assertEquals('UIController', self.controller.__class__.__name__)
+        self.assertEqual('UIController', self.controller.__class__.__name__)
 
     def test_read_vcf(self):
-        self.controller.vcf = Mock()
-        self.controller.read_vcf('sample_files/5samples_5snps.vcf')
+        self.assertFalse(self.controller.vcf)
+        self.controller.read_vcf(io.BytesIO('# foo vcf'))
+        self.assertTrue(self.controller.vcf)
 
 
 

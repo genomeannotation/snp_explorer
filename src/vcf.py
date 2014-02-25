@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
+import sys
 from src.snp import SNP, generate_snp
 
 def is_header(line):
@@ -20,21 +21,21 @@ def get_samples(line):
         samples[splitline[i]] = i
     return samples
 
-def vcf_from_file(filename):
+def read_vcf(iobuffer):
     headers = []
     snps = []
+    samples = []
 
-    with open(filename, 'r') as vcf_file:
-        for line in vcf_file:
-            if is_header(line):
-                headers.append(line)
-            elif is_sample_line(line):
-                samples = get_samples(line)
-            elif is_snp(line):
-                snps.append(generate_snp(line))
-            else:
-                sys.stderr.write("Error trying to read vcf file " + filename)
-                sys.stderr.write("The following line looks like neither header nor snp:\n" + line)
+    for line in iobuffer:
+        if is_header(line):
+            headers.append(line)
+        elif is_sample_line(line):
+            samples = get_samples(line)
+        elif is_snp(line):
+            snps.append(generate_snp(line))
+        else:
+            sys.stderr.write("Error trying to read vcf file.")
+            sys.stderr.write("The following line looks like neither header nor snp:\n" + line)
 
     return VCF(headers=headers, samples=samples, snps=snps)
 
@@ -44,3 +45,8 @@ class VCF:
         self.headers = headers
         self.samples = samples
         self.snps = snps
+    def __str__(self):
+        result = "VCF with " + str(len(self.headers)) + " headers, "
+        result += str(len(self.samples)) + " samples and "
+        result += str(len(self.snps)) + " SNPs"
+        return result

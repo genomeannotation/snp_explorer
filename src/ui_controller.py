@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
-from src.vcf import VCF, vcf_from_file
+from src.vcf import VCF, read_vcf 
 
 class UIController:
 
@@ -9,6 +9,6 @@ class UIController:
         self.vcf = vcf
 
     def read_vcf(self, filename):
-        self.vcf = vcf_from_file(filename)
+        self.vcf = read_vcf(filename)
 
 
