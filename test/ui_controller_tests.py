@@ -2,7 +2,7 @@
 
 import unittest
 import io
-from mock import Mock
+from mock import Mock, patch
 from src.ui_controller import UIController
 
 class TestUIController(unittest.TestCase):
@@ -14,11 +14,16 @@ class TestUIController(unittest.TestCase):
     def test_constructor(self):
         self.assertEqual('UIController', self.controller.__class__.__name__)
 
-    def test_read_vcf(self):
+    # This test asserts that UIController.read_vcf opens the filename passed in
+    # and calls read_vcf on the file returned.
+    @patch('src.ui_controller.read_vcf')
+    @patch('__builtin__.open')
+    def test_read_vcf(self, mock_open, mock_read_vcf):
+        mock_open.return_value = 'foo_file'
         self.assertFalse(self.controller.vcf)
-        # TODO patch io and assert call instead of read real file
-        self.controller.read_vcf("sample_files/5samples_5snps.vcf")
-        self.assertTrue(self.controller.vcf)
+        self.controller.read_vcf("imaginary_vcf")
+        mock_open.assert_called_once_with("imaginary_vcf", 'r')
+        mock_read_vcf.assert_called_with('foo_file')
 
 
 

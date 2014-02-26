@@ -9,6 +9,6 @@ class UIController:
         self.vcf = vcf
 
     def read_vcf(self, filename):
-        self.vcf = read_vcf(open(filename, 'r'))
-
+        f = open(filename, 'r')
+        self.vcf = read_vcf(f)
 
